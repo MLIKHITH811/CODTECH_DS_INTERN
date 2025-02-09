@@ -1,4 +1,4 @@
-#Task 1: Data Pipeline Development
+**Task 1: Data Pipeline Development**
 
 Implemented in: Jupyter Notebook
 
