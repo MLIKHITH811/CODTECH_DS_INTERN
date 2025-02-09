@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iris Flower Prediction</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+    .container {
+      text-align: center;
+      background: #ffffff;
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      margin-top: 20px;
+    }
+    input[type="number"] {
+      margin: 10px 0;
+      padding: 8px;
+      width: 90%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #5cb85c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #4cae4c;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Iris Flower Prediction</h1>
+    <form id="prediction-form">
+      <input type="number" step="0.01" id="sepal_length" placeholder="Sepal Length (cm)" required>
+      <input type="number" step="0.01" id="sepal_width" placeholder="Sepal Width (cm)" required>
+      <input type="number" step="0.01" id="petal_length" placeholder="Petal Length (cm)" required>
+      <input type="number" step="0.01" id="petal_width" placeholder="Petal Width (cm)" required>
+      <button type="submit">Predict</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById('prediction-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      // Get input values
+      const sepalLength = parseFloat(document.getElementById('sepal_length').value);
+      const sepalWidth = parseFloat(document.getElementById('sepal_width').value);
+      const petalLength = parseFloat(document.getElementById('petal_length').value);
+      const petalWidth = parseFloat(document.getElementById('petal_width').value);
+
+      // Prepare data
+      const data = {
+        features: [sepalLength, sepalWidth, petalLength, petalWidth]
+      };
+
+      try {
+        // Send POST request to the API
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        // Display the result
+        if (result.prediction) {
+          document.getElementById('result').textContent = `Predicted Class: ${result.prediction}`;
+        } else {
+          document.getElementById('result').textContent = `Error: ${result.error}`;
+        }
+      } catch (error) {
+        document.getElementById('result').textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
